@@ -25,11 +25,13 @@ app.use(morgan('dev'));
 // Routes
 app.use('/api/v1/test', testRoutes);
 // register routes
-app.use('/api/v1/auth',authRoutes);
+app.use('/api/v1/auth', authRoutes);
+// login routes
+// app.use('/api/v1/auth', authRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('<h1>Welcome to my API</h1>');
+    res.send('<h1>Welcome to my API</h1>');
 });
 
 // Port
@@ -37,5 +39,5 @@ const PORT = process.env.PORT || 4000;
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
