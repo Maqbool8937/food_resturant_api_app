@@ -1,12 +1,16 @@
 import userModel from "../models/userModel.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const saltRounds = 10;
 
 // REGISTER CONTROLLER
 export const registerController = async (req, res) => {
     try {
-        const { userName, email, password, phone, address } = req.body;
+        const { userName, email, password, phone, address, answer } = req.body;
 
-        // Validation
-        if (!userName || !email || !password || !phone) {
+        // Basic validation
+        if (!userName || !email || !password || !phone || !answer || !address) {
             return res.status(400).json({
                 message: "All fields are required",
                 success: false,
@@ -22,26 +26,36 @@ export const registerController = async (req, res) => {
             });
         }
 
+        // Hash the password
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashedPassword = bcrypt.hashSync(password, salt);
+
         // Create user
         const user = await userModel.create({
             userName,
             email,
-            password,
+            password: hashedPassword,
             phone,
             address,
+            answer,
         });
 
         res.status(201).json({
             message: "User registered successfully",
             success: true,
-            user, // Optional: send user info (avoid password)
+            user: {
+                _id: user._id,
+                userName: user.userName,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+            },
         });
     } catch (error) {
         console.error("Error in registerController:", error);
         res.status(500).json({
             message: "Internal server error",
             success: false,
-            error,
         });
     }
 };
@@ -51,7 +65,7 @@ export const loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Validation
+        // Basic validation
         if (!email || !password) {
             return res.status(400).json({
                 message: "Please provide Email and Password",
@@ -68,25 +82,44 @@ export const loginController = async (req, res) => {
             });
         }
 
-        // For now: simple password match (DO NOT use in production)
-        if (user.password !== password) {
+        // Check password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return res.status(401).json({
                 message: "Invalid credentials",
                 success: false,
             });
         }
 
+        // Create JWT token
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+        );
+
         res.status(200).json({
             message: "Login successful",
             success: true,
-            user, // Optional: exclude password when sending user info
+            user: {
+                _id: user._id,
+                userName: user.userName,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+            },
+            token,
         });
     } catch (error) {
         console.error("Error in loginController:", error);
         res.status(500).json({
             message: "Internal server error",
             success: false,
-            error,
         });
     }
 };
+
+// Reset Paassword Controller
+export const resetPasswordCoontroller = async (req, res) => {
+
+}
