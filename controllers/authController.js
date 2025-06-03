@@ -119,7 +119,3 @@ export const loginController = async (req, res) => {
     }
 };
 
-// Reset Paassword Controller
-export const resetPasswordCoontroller = async (req, res) => {
-
-}

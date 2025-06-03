@@ -1,7 +1,5 @@
 import mongoose, { mongo } from "mongoose";
 
-
-
 // Resturant schema
 const resturantSchema = new mongoose.Schema(
     {
@@ -46,6 +44,7 @@ const resturantSchema = new mongoose.Schema(
         code: {
             type: String,
         },
+        // Location coordinates
         coords: {
             id: {
                 type: String,
@@ -55,7 +54,7 @@ const resturantSchema = new mongoose.Schema(
             longitude: { type: Number },
             longitudeDelta: { type: Number },
             address: { type: String },
-            title: { type: String },
+
         }
     },
     {

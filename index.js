@@ -7,6 +7,9 @@ import testRoutes from './routes/testRoutes.js'; // ✅ Import route with .js ex
 import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import resturantRoutes from './routes/resturantRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import foodRoutes from './routes/foodRoutes.js';
 
 
 
@@ -32,8 +35,17 @@ app.use('/api/v1/auth', authRoutes);
 // getUser routes
 app.use('/api/v1/user', userRoutes);
 
-// login routes
-// app.use('/api/v1/auth', authRoutes);
+// Resturants routes
+app.use('/api/v1/resturant', resturantRoutes);
+
+
+// CATEGORY CRUD OPERATIONS:
+
+app.use('/api/v1/category', categoryRoutes);
+
+// FOOD ROUTES || CRUD OPERATIONS
+app.use('/api/v1/food', foodRoutes);
+
 
 // Root route
 app.get('/', (req, res) => {
